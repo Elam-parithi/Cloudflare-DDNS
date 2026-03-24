@@ -73,6 +73,8 @@ Wants=network-online.target
 Type=oneshot
 ExecStart=/usr/bin/python3 /usr/local/bin/update_dns.py
 RemainAfterExit=yes
+StandardOutput=append:/var/log/cloudflare_update.log
+StandardError=append:/var/log/cloudflare_update.log
 
 [Install]
 WantedBy=multi-user.target
