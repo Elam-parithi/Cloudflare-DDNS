@@ -1,7 +1,14 @@
 # 🚀 Cloudflare DDNS
-Updates Cloudflare's A records Automatically. Making it your own DDNS with our own domain name.
-# Cloudflare DNS Auto-Updater for AWS EC2
+Updates Cloudflare's A records Automatically. Making it your own DDNS with our own domain name. I previously had GoDaddy update that is not available unless you have more than 10 domains in you account.
+### why this project ?
+I made a Cloudflare DDNS which has a Free API. If you brought your domain in other agents. you can ponint that Name servers to cloudflare and its free. 
+When using the free public ddns it whant to make their DNS as your primary DNS configuration. This makes you volnurable. And the cost is pritty much high when compared to buying your domain itself. Domain cost $10 – $20/year (e.g., .com, .net). Paid DDNS $25 – $55/year (Standard Premium tiers).Not free version those have no privacy against data bokers. every thing costs money free versions get the cost back by selling your data. 
+also fre versions limits to 5-10 subdomains per accounts. if you buy one domain name you get unlimited subdomains.
 
+### Cloudflare DNS Auto-Updater for PC / local_server / AWS EC2 / Embedded remote projects
+* Better if your are using the AWS instance ocassionaly. but not deleting the instance. so, when the EC2's public changes you won't be affected. other wise it will reset the Public IPv4 and It's Public DNS. check ✅ this setup will automatically updates the cloudflare records. (EC2 Elastic IP($3.65 / month), if you don't want to shut down your instances. But, I shutdown and restart every day whenever i want to use my features from my server. so, EC2 static IP is waste of money for me.)
+* If your are using ISP they change the IP every 24hrs or even often sometimes. check ✅ again you get help with this one.
+* a home server to access from outside ✅ check
 A Python-based utility designed to run on **AWS EC2** instances (optimized for **RedHat 10.1** and **Ubuntu 24.04**) to automatically update a Cloudflare A record with the instance's public IP address upon every boot.
 
 ## 🚀 Features
@@ -89,16 +96,6 @@ Double-check that you are using an **API Token** and not a **Global API Key**.
 ### Permission Denied
 
 Ensure you run the initial script and `systemctl` commands with `sudo`.
-
-### Finding Record ID
-
-If you don't have your Record ID, run:
-
-```bash
-curl -X GET "https://api.cloudflare.com/client/v4/zones/YOUR_ZONE_ID/dns_records" \
-     -H "Authorization: Bearer YOUR_API_TOKEN" \
-     -H "Content-Type: application/json" | python3 -m json.tool
-```
 
 ---
 
