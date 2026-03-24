@@ -101,19 +101,19 @@ To prevent the log file from consuming disk space, configure `logrotate`:
     sharedscripts
     su root root
    }
-```
+   ```
 3. change permissions for log file
-```bash
+   ```bash
    # Ensure root owns the log file
    sudo chown root:root /var/log/cloudflare_update.log
 
    # Ensure the log file isn't world-writable (644 is standard)
    sudo chmod 644 /var/log/cloudflare_update.log
-```
+   ```
 4. Force run to see if it works
-```bash
+   ```bash
    sudo logrotate -vf /etc/logrotate.d/cloudflare-update
-```
+   ```
 ---
 
 ## 🔍 Troubleshooting
