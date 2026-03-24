@@ -38,7 +38,7 @@ Since modern Linux distributions (PEP 668) restrict global `pip` installs, use t
 
 **Ubuntu:**
 ```bash
-sudo apt update && sudo apt install python3-requests dns.resolver -y
+sudo apt update && sudo apt install python3-requests python3-dnspython -y
 ```
 
 ## 2. Deploy and Test
