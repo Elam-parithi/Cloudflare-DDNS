@@ -84,7 +84,19 @@ WantedBy=multi-user.target
 sudo systemctl daemon-reload
 sudo systemctl enable update-dns.service
 ```
+## 🪵 Log Rotation
+To prevent the log file from consuming disk space, configure `logrotate`:
 
+1. Create the config: `sudo nano /etc/logrotate.d/cloudflare-update`
+2. Add:
+   ```text
+   /var/log/cloudflare_update.log {
+       daily
+       rotate 7
+       compress
+       missingok
+       notifempty
+   }
 ---
 
 ## 🔍 Troubleshooting
