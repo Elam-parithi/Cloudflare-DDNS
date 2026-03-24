@@ -30,7 +30,6 @@ console_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 logger.addHandler(console_handler)
 
-print("Logging initialized. All actions will be logged to z_dns_update.log`")
 def get_public_ip():
     # Fetch public IP from AWS metadata service
     return requests.get("https://checkip.amazonaws.com").text.strip()
@@ -97,7 +96,7 @@ def create_cloudflare_record( ip_address):
         return None
     
 def update_cloudflare(ip):
-    DNS_TTL = 60 # seconds
+    global DNS_TTL = 60 # seconds [10,15,30,60,120,300,720,14040] minutes only allowed convert it to seconds 
     headers = {
         "Authorization": f"Bearer {API_TOKEN}",
         "Content-Type": "application/json"
@@ -152,13 +151,11 @@ def update_cloudflare(ip):
         logging.error(f"[!] Update failed: {response}")
 
 if __name__ == "__main__":
-    Okwaiting_delay = 60 # seconds
     Updateing_delay = 120 # seconds
     
-    logging.info("Starting DNS update script... @ bai(update-dns.py)" + time.strftime("%Y-%m-%d %H:%M:%S"))
+    logging.info("Starting DNS update script" + time.strftime("%Y-%m-%d %H:%M:%S"))
     logging.info(f"Current public IP: {get_public_ip()}")
-    logging.info(f"waiting delay is set to {Okwaiting_delay} seconds, update delay is set to {Updateing_delay} seconds. @main")
-    print("Entering main loop. Will check every 60 seconds for IP changes...")
+    logging.info(f"waiting delay is set to {Okwaiting_delay} seconds, update delay is set to {Updateing_delay} seconds.")
     while True:
         current_ip_address = get_public_ip()
         if current_ip_address is None: # if the own server ip is not available, exit with error
@@ -175,16 +172,16 @@ if __name__ == "__main__":
                 # cloud flare checking area
                 from_cloudflare = lookup_at_source(RECORD_NAME)
                 if from_cloudflare == current_ip_address: # check with colud flare's DNS server
-                    logging.info(f"CLOUDFLARE DNS : UP TO DATE | {RECORD_NAME} => {from_cloudflare} is already up to date at source(1.1.1.1). will wait for update to propagate to local DNS. waithing...(120)@source ok")
+                    logging.info(f"CLOUDFLARE DNS : UP TO DATE | {RECORD_NAME} => {from_cloudflare} is already up to date at source(1.1.1.1). wait for update to propagate to local DNS. waiting {Updateing_delay} seconds")
                     time.sleep(Updateing_delay) # Wait for 2 minutes to allow DNS propagation before the next check.
                 else:
                     logging.info(f"CLOUDFLARE DNS : NOT UPDATED | Updating(update_cloudflare) {RECORD_NAME} => {from_cloudflare} >>>> {current_ip_address}")
                     result = update_cloudflare(current_ip_address)
                     if result is not None and result.get("success"):
-                        logging.info(f"CLOUDFLARE DNS : SUCCESS | updated {RECORD_NAME} to {current_ip_address}. waithing...(90)@update")
+                        logging.info(f"CLOUDFLARE DNS : SUCCESS | updated {RECORD_NAME} to {current_ip_address}. waithing ({Updateing_delay} seconds)")
                         time.sleep(Updateing_delay) # Wait a bit before the next check to avoid hitting before the dns record is fully propagated.
                         continue
                     else:
                         logging.error(f"Failed to update: {result}")
-        logging.info("UPDATE_DNS :  OK & RUNNING | Waiting for the next check... (60 seconds)@while last")
-        time.sleep(Okwaiting_delay) # Check every 1 minute
+        logging.info(f"UPDATE_DNS :  OK & RUNNING | Waiting for the next check ({Okwaiting_delay} seconds)")
+        time.sleep(DNS_TTL) # Check every 1 minute
